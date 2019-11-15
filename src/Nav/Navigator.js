@@ -10,12 +10,10 @@ import Login from '../Screen/Login/index';
 import Register from '../Screen/Register/index';
 import Notification from '../Screen/Notification/index';
 import Products from '../Screen/Products/index';
-import Splash from '../Screen/Splash/index';
 import User from '../Screen/User/index';
 import DrawerScreen from '../Screen/Drawave/index';
 
 import Icon from 'react-native-vector-icons/Ionicons';
-import IconSimpleLine from 'react-native-vector-icons/SimpleLineIcons';
 
 // BottomNavigator
 const TabsBottom = createBottomTabNavigator(
@@ -25,7 +23,7 @@ const TabsBottom = createBottomTabNavigator(
       navigationOptions: {
         tabBarLabel: 'Home',
         headerStyle: {
-           backgroundColor: 'red',
+          backgroundColor: 'red',
         },
         tabBarIcon: ({tintColor}) => (
           <Icon name="md-home" color={tintColor} size={20} />
@@ -58,7 +56,7 @@ const TabsBottom = createBottomTabNavigator(
       navigationOptions: {
         tabBarLabel: 'Tôi Bán',
         tabBarIcon: ({tintColor}) => (
-          <IconSimpleLine name="user" color={tintColor} size={15} />
+          <Icon name="user" color={tintColor} size={15} />
         ),
       },
     },
@@ -89,16 +87,15 @@ const TabDrawer = createDrawerNavigator(
 
 // Navigator Stack login & register
 const StackNavigator = createStackNavigator(
-    {
-        TabDrawer: TabDrawer,
-        Splash: Splash,
-        Login: Login,
-        SignUp: Register,
-    },
-    {
-        initialRouteName: 'Splash',
-        headerMode: 'none',
-    },
+  {
+    TabDrawer: TabDrawer,
+    Login: Login,
+    SignUp: Register,
+  },
+  {
+    initialRouteName: 'Login',
+    headerMode: 'none',
+  },
 );
 
 const AppNav = createAppContainer(StackNavigator);

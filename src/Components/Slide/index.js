@@ -73,7 +73,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
   },
   child: {
-    height: height * 0.25,
+    height: height * 0.2,
     width,
     justifyContent: 'center',
   },

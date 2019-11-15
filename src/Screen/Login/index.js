@@ -1,82 +1,155 @@
-import React, {Component} from 'react';
+import React, {useState} from 'react';
 import {
+  StyleSheet,
   KeyboardAvoidingView,
   View,
   TextInput,
   Text,
   TouchableOpacity,
-    StatusBar,
+  StatusBar,
+  ToastAndroid,
+  Alert,
+  ImageBackground,
 } from 'react-native';
 import {ListItem, Body, CheckBox} from 'native-base';
 import Logo from '../../Components/Logo/index';
+import {firebaseApp} from '../../Middle/Api/Firebase/Firebase';
+
 // icon
 import IconAn from 'react-native-vector-icons/AntDesign';
 
 // style
-import styles from '../../Asset/styles';
+import styles from '../../Asset/Login';
 
-export default class Index extends Component {
+const Login = props => {
+  // state
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [remember, setRemember] = useState('');
+  const [loading, setLoading] = useState(false);
 
+  // login
+  const onLogin = () => {
+    firebaseApp
+      .auth()
+      .signInWithEmailAndPassword(email, password)
+      .then(() => {
+        props.navigation.navigate('Home');
+        setEmail('');
+        setPassword('');
+      })
+      .catch(err => {
+        console.log('err,', err);
+        Alert.alert(
+          'Login',
+          'Đăng nhập thất bại!',
+          [
+            {
+              text: 'Cancel',
+              //onPress: () => console.log('Cancel Pressed'),
+              style: 'cancel',
+            },
+            {text: 'OK', onPress: () => {}},
+          ],
+          {cancelable: false},
+        );
+      });
+  };
 
-  constructor(prop) {
-    super(prop);
-    console.log('afa', this.props.navigation);
-  }
-  render() {
-    return (
+  const onLoginFB = () => {
+    Alert.alert('login on FB');
+  };
 
-        <KeyboardAvoidingView style={styles.boxView}>
-          <StatusBar backgroundColor='#2B99BF' barStyle='light-content' />
+  return (
+    <ImageBackground
+      source={require('../../../Images/anh-nen1.png')}
+      style={{width: '100%', height: '100%'}}>
+      <View style={styles.boxView}>
+        <StatusBar
+          backgroundColor="transparent"
+          barStyle="light-content"
+          hidden={false}
+          translucent={true}
+        />
+        <View style={{paddingLeft: 50, paddingRight: 50}}>
+          <View style={{marginBottom: 20}}>
+            <Logo />
+          </View>
+
           <View>
-            <View style={{marginBottom: 20}}>
-              <Logo />
-            </View>
-            <View>
-              <View style={{flexDirection: 'row', padding: 5, borderBottomWidth: 1, borderBottomColor: '#BACBC8', marginBottom: 15}}>
-                <IconAn name={'user'} size={25} color={'#D8CFD8'} style={{marginTop: 5}}/>
-                <TextInput placeholder="User.." />
+            <KeyboardAvoidingView>
+              <View style={styles.boxInput}>
+                <IconAn
+                  name={'user'}
+                  size={25}
+                  color={'#353131'}
+                  style={{marginTop: 7}}
+                />
+                <TextInput
+                  placeholder="User.."
+                  style={styles.txtInput}
+                  onChangeText={email => setEmail(email)}
+                  value={email}
+                />
               </View>
-              <View style={{flexDirection: 'row', padding: 5, borderBottomWidth: 1, borderBottomColor: '#BACBC8'}}>
-                <IconAn name={'unlock'} size={25} color={'#D8CFD8'} style={{marginTop: 5}} />
-                <TextInput placeholder="Password.." />
+              <View style={styles.boxInput}>
+                <IconAn
+                  name={'unlock'}
+                  size={25}
+                  color={'#353131'}
+                  style={{marginTop: 7}}
+                />
+                <TextInput
+                  placeholder="Password.."
+                  style={styles.txtInput}
+                  secureTextEntry={true}
+                  onChangeText={password => setPassword(password)}
+                  value={password}
+                />
               </View>
               <ListItem style={{borderBottomWidth: 0}}>
-                <CheckBox checked={false} color="green" style={{borderRadius: 30, marginRight: 20, borderColor: '#3A403D'}}/>
+                <CheckBox
+                  checked={false}
+                  color="green"
+                  style={styles.checkbox}
+                />
                 <Body>
                   <Text style={{color: '#3A403D'}}>Nhớ mật khẩu!</Text>
                 </Body>
               </ListItem>
-              <TouchableOpacity
-                  style={styles.boxTouchableOpacity}
-                  onPress={() => this.props.navigation.navigate('Home')}>
-                <View style={{flexDirection: 'row', justifyContent: 'center'}}>
-                  <IconAn name={'login'} size={20} color={'#ffffff'}/>
-                  <Text style={styles.text}>Login</Text>
-                </View>
-              </TouchableOpacity>
-              <TouchableOpacity
-                  style={styles.boxTouchableOpacityFB}
-                  onPress={() => this.props.navigation.navigate('Home')}>
-                <View style={{flexDirection: 'row', justifyContent: 'center'}}>
-                  <IconAn name={'facebook-square'} size={20} color={'#ffffff'} />
-                  <Text style={{ fontSize: 15, marginLeft: 5, color: '#ffffff'}}>Facebook</Text>
-                </View>
-              </TouchableOpacity>
-            </View>
-            <View>
-              <View style={styles.boxSignUp}>
-                <Text style={styles.color}>Don't have an account? </Text>
-                <TouchableOpacity
-                    onPress={() => this.props.navigation.navigate('SignUp')}>
-                  <Text style={styles.textSignUp}>Sign Up</Text>
-                </TouchableOpacity>
+            </KeyboardAvoidingView>
+            {/* <Text style={styles.error}>{error}</Text> */}
+            <TouchableOpacity
+              style={styles.boxTouchableOpacity}
+              onPress={onLogin}>
+              <View style={{flexDirection: 'row', justifyContent: 'center'}}>
+                <IconAn name={'login'} size={20} color={'#353131'} />
+                <Text style={styles.text}>Login</Text>
               </View>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.boxTouchableOpacityFB}
+              onPress={onLoginFB}>
+              <View style={{flexDirection: 'row', justifyContent: 'center'}}>
+                <IconAn name={'facebook-square'} size={20} color={'#ffffff'} />
+                <Text style={[styles.text, styles.colorWhite]}>Facebook</Text>
+              </View>
+            </TouchableOpacity>
+          </View>
+          <View>
+            <View style={styles.boxSignUp}>
+              <Text style={styles.txtNotAccount}>Don't have an account? </Text>
+              <TouchableOpacity
+                onPress={() => props.navigation.navigate('SignUp')}>
+                <Text style={styles.textSignUp}>Sign Up</Text>
+              </TouchableOpacity>
             </View>
           </View>
-        </KeyboardAvoidingView>
+        </View>
+      </View>
+    </ImageBackground>
+  );
+};
 
-    );
-  }
-}
-
+export default Login;
 // https://github.com/longbem/DownloadTruyen.git
